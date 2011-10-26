@@ -2,7 +2,7 @@ require "cap-elb/version"
 require 'right_aws'
 
 unless Capistrano::Configuration.respond_to?(:instance)
-  abort "capistrano/elb requires Capistrano 2"
+  abort "cap-elb requires Capistrano 2"
 end
 
 module Capistrano
