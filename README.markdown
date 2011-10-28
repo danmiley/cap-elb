@@ -1,7 +1,7 @@
 cap-elb
 =================================================
 
-Capistrano plugin or deploying to Amazon EC2 instances behind ELBs
+Capistrano plugin or deploying to Amazon EC2 instances behind Amazon ELBs (Elastic Load Balancers)
 
 Introduction
 ============
@@ -105,12 +105,9 @@ Additional Ruby class/method documentation is available at: [http://rubydoc.info
 
 Credits
 =======
-* capistrano-ec2group: [Logan Raarup](http://github.com/logandk)
 * capistrano: [Jamis Buck](http://github.com/jamis/capistrano)
+* capistrano-ec2group: [Logan Raarup](http://github.com/logandk) - Logan's 2009 work with cap deploy using security group abstraction got me going on how to do an AWS oriented cap plug-in, thank you!
 
-
-###Thanks to###
-* [Logan Raarup](http://github.com/logandk - Logan's work with cap deploy using security group abstraction got me going on how to do an AWS oriented cap plug-in, thank you!
 
 
 Copyright (c) 2011 Dan Miley, released under the MIT license
