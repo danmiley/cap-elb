@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 	s.email       = ["dan.miley@gmail.com"]
 	s.homepage    = "http://github.com/danmiley/cap-elb"
 	s.summary     = %q{UNDEREAVY DEVELOPMENT AT THIS TIME: Capistrano can perform tasks on Amazon ELB instances.}
-	s.description = %q{(UNDER HEAVY ITERATIVE DEVELOPMENT AT THIS TIME, recommend wait for a 0.x release for usage.) Capistrano can perform tasks on Amazon ELB instances; various arguments to allow instance tags to determine whether task should be applied on the given tag}
+	s.description = %q{Capistrano can perform tasks on Amazon ELB instances; various arguments to allow instance tags to determine whether task should be applied on the given tag.}
 
 	s.rubyforge_project = "cap-elb"
 
