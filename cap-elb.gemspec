@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
 	s.require_paths = ["lib"]
 
 	s.add_dependency "right_aws", "2.1.0"
+	s.add_dependency "aws-sdk", "1.2.2"
 	s.add_development_dependency "rspec", "~> 2.6"
 
 
