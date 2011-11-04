@@ -39,16 +39,22 @@ If you wish, you can also set other AWS specfic parameters:
 
 	set :aws_params, :region => 'us-east-1'
 	
-In order to define your instance groups, you must specify the security group name, the roles and params:
-Next you will set up your instance sets associated with a named load balancer instance in your AWS account.
-You will call out the load balancer name (e.g. 'lb_webserver'), the capistrano role associated with that load balancer (.e.g. 'web'),
+Setting region is required if you are not using default region 'us-east-1'.
+If your ELB is not in us-east-1, and you do not specify region parameter as above,
+you will get an error indicating that no ELB could be found with that name in that region.
+
+In order to define your instance sets associated with your load balancer based deploys, you must specify the load balancer name, the associated roles for that load balancer and any optional params:
+For example, in deploy.rb, you would enter the load balancer name (e.g. 'lb_webserver'), the capistrano role associated with that load balancer (.e.g. 'web'),
 and any optional params.
 
 	loadbalancer :lb_webserver, :web
 	loadbalancer :lb_appserver, :app
 	loadbalancer :lb_dbserver, :db, :port => 22000
 
-There are two special parameters you can add, :require and :exclude.
+There are two special optional parameters you can add, :require and :exclude. These allow you to exclude instances associated with your named load balancer from the deploy,
+if they meet or fail to meet your :require/:exclude specifications. 
+
+The :require and :exclude parameters work on Amazon EC2 instance metadata.
 
 AWS instances have top level metadata and user defined tag data, and this data can be used by your loadbalancer rule
  to include or exclude certain instances from the instance set.

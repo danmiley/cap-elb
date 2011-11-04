@@ -1,5 +1,6 @@
 require 'right_aws'
-require "cap-elb/version"
+require 'aws-sdk' # need for ELB instance getter
+require 'cap-elb/version'
 
 unless Capistrano::Configuration.respond_to?(:instance)
   abort "cap-elb requires Capistrano 2"
@@ -88,22 +89,31 @@ module Capistrano
 	    # 	% cap ec2:list
 
       def loadbalancer (named_load_balancer, *args)
+
+	      aws_config_setup
+
 	      require_arglist = args[1][:require] rescue {}
 	      exclude_arglist = args[1][:exclude] rescue {}
+	      named_region = fetch(:aws_params)[:region] rescue 'us-east-1'
 
 	      # list of all the instances assoc'ed with this account
 	      @ec2_api ||= RightAws::Ec2.new(fetch(:aws_access_key_id), fetch(:aws_secret_access_key), fetch(:aws_params, {}))
 
-	      # fetch a raw list all the load balancers
-	      @elb_api ||= RightAws::ElbInterface.new(fetch(:aws_access_key_id), fetch(:aws_secret_access_key))
+	      # fetch a raw list all the load balancers, this is best done in Amaazons' aws-sdk, as it allows region specification for LBs.
+	      # strangely, RightScale gem doesnt seem to support this.
+	      # i filed a bug with RightScale: https://github.com/rightscale/right_aws/issues/95
+	      @elb_api = AWS::ELB.new
 
 	      # only get the named load balancer
-	      named_elb_instance = @elb_api.describe_load_balancers.delete_if{ |instance| instance[:load_balancer_name] != named_load_balancer.to_s }
+	      named_elb = @elb_api.load_balancers[named_load_balancer]
 
 	      # must exit if no load balancer on record for this account by given name in cap config file
-	      raise Exception, "No load balancer named: #{named_load_balancer.to_s} for aws account with this access key: #{:aws_access_key_id}" if named_elb_instance.empty?
+	      raise Exception, "No load balancer found named: #{named_load_balancer.to_s} for aws account with this access key: #{fetch(:aws_access_key_id)} in this region: #{named_region}" if named_elb.nil?
+	      # probe for a count of the instances, if this raises Exception, load balancer can't be found
+	      named_elb.instances.count rescue raise Exception, "No load balancer found named: #{named_load_balancer.to_s} for aws account with this access key: #{fetch(:aws_access_key_id)} in this region: #{named_region}" 
+	      raise Exception, "No instances within this load balancer: #{named_load_balancer.to_s} for aws account with this access key: #{fetch(:aws_access_key_id)} in this region: #{named_region}" if  named_elb.instances.count == 0
 
-	      elb_ec2_instances = named_elb_instance[0][:instances] rescue {}
+	      elb_ec2_instances = named_elb.instances.map { |i| i.id }  # list of instance ids
 
 	      # get the full instance list for account, this is necessary to subsquently fish out the :dns_name for the instances that survive our reduction steps
 	      account_instance_list = @ec2_api.describe_instances
@@ -125,6 +135,27 @@ module Capistrano
 
       private
 
+      # AWS SDK setup
+      def aws_config_setup()
+
+	      # derive AWS canonical endpoints from given region
+	      # set :ec2_endpoint , 'ec2.us-west-1.amazonaws.com'
+	      # set :elb_endpoint ,'us-west-1.elasticloadbalancing.amazonaws.com'
+
+	      named_region = fetch(:aws_params)[:region] rescue 'us-east-1'
+
+	      ec2_endpoint = "ec2.#{named_region}.amazonaws.com"
+	      elb_endpoint = "#{named_region}.elasticloadbalancing.amazonaws.com"
+
+	      # aws configuration, required separately
+	      AWS.config({
+				 :access_key_id => fetch(:aws_access_key_id),
+				 :secret_access_key => fetch(:aws_secret_access_key),
+				 :ec2_endpoint => ec2_endpoint,
+				 :elb_endpoint => elb_endpoint,
+			 })
+      end
+      
       def any_args_within_instance(instance, exclude_arglist)
 	      exargs = exclude_arglist.clone # must copy since delete transcends scope; if we don't copy, subsequent 'map'ped enum arglists would be side-effected
 	      tag_exclude_state = nil # default assumption
