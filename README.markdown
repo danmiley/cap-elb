@@ -114,6 +114,9 @@ Credits
 * capistrano: [Jamis Buck](http://github.com/jamis/capistrano)
 * capistrano-ec2group: [Logan Raarup](http://github.com/logandk) - Logan's 2009 work with cap deploy using security group abstraction got me going on how to do an AWS oriented cap plug-in, thank you!
 
+Issue Notes
+=======
+* aws-sdk - very slow to callect full metadata for all n instances behind an ELB. amazon thread on the subject: [https://forums.aws.amazon.com/thread.jspa?threadID=77735]
 
 
 Copyright (c) 2011 Dan Miley, released under the MIT license
