@@ -20,6 +20,5 @@ Gem::Specification.new do |s|
 
 	s.add_dependency "right_aws", "2.1.0"
 	s.add_development_dependency "rspec"
-#	s.add_development_dependency "rake", ">=0.8.7"
 
 end
