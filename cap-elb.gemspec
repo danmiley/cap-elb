@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
 	s.require_paths = ["lib"]
 
 	s.add_dependency "right_aws"
+	s.add_dependency "capistrano-ext"  # required for multistage feature
 	s.add_development_dependency "rspec"
 
 end
