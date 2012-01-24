@@ -9,7 +9,8 @@ Gem::Specification.new do |s|
 	s.email       = ["dan.miley@gmail.com"]
 	s.homepage    = "http://github.com/danmiley/cap-elb"
 	s.summary     = %q{Capistrano can perform tasks on EC2 intstance managed by individual Amazon ELB instances.}
-	s.description = %q{Capistrano can perform tasks on the EC2 instances managed by named Amazon ELB instances.  Various filters are qvailable to allow EC2 instance top level metadata and tags to determine whether the task should be applied on the given instance.}
+	s.description = %q{Capistrano can perform tasks on the EC2 instances managed by named Amazon ELB instances. }
+#       Various filters are qvailable to allow EC2 instance top level metadata and tags to determine whether the task should be applied on the given instance.
 
 	s.rubyforge_project = "cap-elb"
 
