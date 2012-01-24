@@ -93,6 +93,12 @@ module Capistrano
 	      exclude_arglist = args[1][:exclude] rescue {}
 	      named_region = fetch(:aws_params)[:region] rescue 'us-east-1'
 
+	      # can't have a EC2_URL env var if region has been provided
+	      # otherwise the RightScale gem will overresolve the url and region and form a bad endpoint
+	      # in the RightAWS::Ec2.new class
+	      # this undefine only lasts the extent of the cap task, doesn't affect the parent process.
+	      ENV['EC2_URL'] = nil if !named_region.nil?
+
 	      # list of all the instances assoc'ed with this account
 	      @ec2_api ||= RightAws::Ec2.new(fetch(:aws_access_key_id), fetch(:aws_secret_access_key), fetch(:aws_params, {}))
 
