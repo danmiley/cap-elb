@@ -100,6 +100,11 @@ add this to your cap deploy file:
 This will give you the list of hosts behind the load balancer that meet the criteria.
 	% cap ec2:list
 
+Version Informatoin
+=============
+Version 0.2.0  - ELBs behind VPCs didn't work on all 0.1.x, due to no :dns_name for VPC shielded hosts. Now we fall back to IP addresses in 0.2.x and above
+
+
 Documentation
 =============
 Additional Ruby class/method documentation is available at: [http://rubydoc.info/gems/cap-elb/frames] (http://rubydoc.info/gems/cap-elb/frames)

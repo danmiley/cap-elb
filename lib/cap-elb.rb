@@ -130,7 +130,9 @@ module Capistrano
 
 	      # finally load the derived instances into the serverlist used by capistrano tasks
 	      account_instance_list.each do |instance|
-		      server(instance[:dns_name], *args)
+		      hostname = instance[:dns_name] 
+		      hostname = instance[:ip_address] if hostname.empty?   # if host in a VPC, there will be no DNS name, use ip_address instead
+		      server(hostname, *args)
 	      end
       end
 
